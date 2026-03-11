@@ -1,0 +1,14 @@
+.app-root[data-dir='rtl'] {
+  direction: rtl;
+}
+
+.app-root[data-dir='rtl'] .nx-header-inner,
+.app-root[data-dir='rtl'] .nx-main,
+.app-root[data-dir='rtl'] .nx-footer {
+  text-align: right;
+}
+
+.app-root[data-dir='rtl'] .nx-eyebrow::before {
+  display: none;
+}
+

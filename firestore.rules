@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users Collection
+    match /users/{userId} {
+      // User can read their own profile. Admin can read all.
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      // Only admin can write to users (auth handles creation in signup)
+      allow write: if isAdmin() || (request.auth != null && request.auth.uid == userId);
+    }
+
+    // Service Requests Collection
+    match /service_requests/{requestId} {
+      // User can create. User can read own. Admin can read all.
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || isAdmin());
+      // Admin can update status
+      allow update: if request.auth != null && isAdmin();
+      // Admin can delete
+      allow delete: if request.auth != null && isAdmin();
+    }
+
+    // Portfolio Projects Collection
+    match /portfolio_projects/{projectId} {
+      // Public read
+      allow read: if true;
+      // Admin write
+      allow write: if request.auth != null && isAdmin();
+    }
+
+    // Helper functions
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+  }
+}
