@@ -24,13 +24,15 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (!user) return
     const q = query(
-      collection(db, 'service_requests'),
-      orderBy('createdAt', 'desc'),
+      collection(db, 'service_requests')
     )
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
-        setRequests(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
+        if (!snapshot || snapshot.empty) { setRequests([]); setLoading(false); return }
+        const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+        list.sort((a,b)=> (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0))
+        setRequests(list)
         setLoading(false)
       },
       (err) => {
@@ -73,6 +75,31 @@ export default function AdminDashboard() {
             <Mail className="w-4 h-4" />{' '}
             <span>{t.dashboard.admin.requests}</span>
           </button>
+          
+          <button
+            type="button"
+            onClick={() => setActiveTab('projects')}
+            className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors text-sm font-medium ${
+              activeTab === 'projects'
+                ? 'bg-white/10 text-white border border-white/5'
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <span>Projects</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('invoices')}
+            className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors text-sm font-medium ${
+              activeTab === 'invoices'
+                ? 'bg-white/10 text-white border border-white/5'
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <span>Invoices</span>
+          </button>
+
           <button
             type="button"
             onClick={() => setActiveTab('portfolio')}
@@ -164,11 +191,31 @@ export default function AdminDashboard() {
                               value={req.status}
                               onChange={async (e) => {
                                 const newStatus = e.target.value
-                                await updateDoc(doc(db, 'service_requests', req.id), { status: newStatus })
+                                
+                                try {
+                                  // Update the request status
+                                  await updateDoc(doc(db, 'service_requests', req.id), { status: newStatus })
+                                  
+                                  // If approved, create a project automatically
+                                  if (newStatus === 'Approved' && req.status !== 'Approved') {
+                                    await addDoc(collection(db, 'projects'), {
+                                      title: `${req.service} for ${req.company || req.name}`,
+                                      clientId: req.userId,
+                                      serviceType: req.service,
+                                      status: 'Active',
+                                      progress: 0,
+                                      requestId: req.id,
+                                      createdAt: new Date()
+                                    })
+                                  }
+                                } catch (error) {
+                                  console.error("Error updating status or creating project: ", error)
+                                }
                               }}
                               className="bg-[#020617] text-xs border border-white/10 rounded px-2 py-1 text-slate-300 focus:outline-none"
                             >
                               <option value="Pending">Pending</option>
+                              <option value="Approved">Approved / Create Project</option>
                               <option value="In Progress">In Progress</option>
                               <option value="Completed">Completed</option>
                               <option value="Rejected">Rejected</option>
@@ -189,6 +236,38 @@ export default function AdminDashboard() {
                   </table>
                 </div>
               )}
+            </motion.div>
+          )}
+
+          {activeTab === 'projects' && (
+            <motion.div
+              key="proj"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              <div className="flex justify-between items-center mb-8 pb-6 border-b border-white/5">
+                <h2 className="text-2xl font-bold text-white tracking-tight">
+                  Projects Management
+                </h2>
+              </div>
+              <AdminProjectsTab />
+            </motion.div>
+          )}
+
+          {activeTab === 'invoices' && (
+            <motion.div
+              key="inv"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              <div className="flex justify-between items-center mb-8 pb-6 border-b border-white/5">
+                <h2 className="text-2xl font-bold text-white tracking-tight">
+                  Invoices Management
+                </h2>
+              </div>
+              <AdminInvoicesTab />
             </motion.div>
           )}
 
@@ -225,9 +304,12 @@ function PortfolioAdminTab() {
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    const q = query(collection(db, 'portfolio_projects'), orderBy('createdAt', 'desc'))
+    const q = query(collection(db, 'portfolio_projects'))
     const unsub = onSnapshot(q, (snapshot) => {
-      setProjects(snapshot.docs.map(d => ({ id: d.id, ...d.data() })))
+      if (!snapshot || snapshot.empty) { setProjects([]); setLoading(false); return }
+      const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+      list.sort((a,b)=> (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0))
+      setProjects(list)
       setLoading(false)
     })
     return () => unsub()
@@ -317,6 +399,149 @@ function PortfolioAdminTab() {
         )}
       </div>
 
+    </div>
+  )
+}
+
+function AdminProjectsTab() {
+  const [projects, setProjects] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const q = query(collection(db, 'projects'))
+    const unsub = onSnapshot(q, (snapshot) => {
+      if (!snapshot || snapshot.empty) { setProjects([]); setLoading(false); return }
+      const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+      list.sort((a,b)=> (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0))
+      setProjects(list)
+      setLoading(false)
+    })
+    return () => unsub()
+  }, [])
+
+  return (
+    <div className="overflow-x-auto">
+      {loading ? <div className="text-slate-500">Loading projects...</div> : projects.length === 0 ? <div className="text-slate-500 py-10">No projects found.</div> : (
+        <table className="w-full text-left text-sm whitespace-nowrap">
+          <thead className="text-xs uppercase tracking-wider text-slate-500 border-b border-white/5">
+            <tr>
+              <th className="pb-4 font-semibold px-2">Project</th>
+              <th className="pb-4 font-semibold px-2">Progress</th>
+              <th className="pb-4 font-semibold px-2">Status</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {projects.map(proj => (
+              <tr key={proj.id} className="hover:bg-white/[0.02] transition-colors">
+                <td className="py-4 px-2">
+                  <p className="font-medium text-white">{proj.title}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Client ID: {proj.clientId}</p>
+                </td>
+                <td className="py-4 px-2">
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="range" min="0" max="100" value={proj.progress || 0}
+                      onChange={async (e) => {
+                        await updateDoc(doc(db, 'projects', proj.id), { progress: parseInt(e.target.value) })
+                      }}
+                      className="w-24 accent-blue-500"
+                    />
+                    <span className="text-slate-300 text-xs">{proj.progress || 0}%</span>
+                  </div>
+                </td>
+                <td className="py-4 px-2">
+                  <select
+                    value={proj.status}
+                    onChange={async (e) => {
+                      await updateDoc(doc(db, 'projects', proj.id), { status: e.target.value })
+                    }}
+                    className="bg-[#020617] text-xs border border-white/10 rounded px-2 py-1 text-slate-300 focus:outline-none"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="On Hold">On Hold</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  )
+}
+
+function AdminInvoicesTab() {
+  const [invoices, setInvoices] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [formData, setFormData] = useState({ projectId: '', clientId: '', amount: '' })
+  const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    const q = query(collection(db, 'invoices'))
+    const unsub = onSnapshot(q, (snapshot) => {
+      if (!snapshot || snapshot.empty) { setInvoices([]); setLoading(false); return }
+      const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+      list.sort((a,b)=> (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0))
+      setInvoices(list)
+      setLoading(false)
+    })
+    return () => unsub()
+  }, [])
+
+  const handleCreate = async (e) => {
+    e.preventDefault()
+    setSubmitting(true)
+    try {
+      await addDoc(collection(db, 'invoices'), {
+        ...formData,
+        amount: parseFloat(formData.amount),
+        status: 'Unpaid',
+        createdAt: new Date()
+      })
+      setFormData({ projectId: '', clientId: '', amount: '' })
+    } catch (err) {
+      console.error(err)
+    }
+    setSubmitting(false)
+  }
+
+  const deleteInvoice = async (id) => {
+    if (confirm("Delete invoice?")) await deleteDoc(doc(db, 'invoices', id))
+  }
+
+  return (
+    <div className="space-y-10">
+      <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+        <h3 className="text-lg font-semibold text-white mb-4">Create Invoice</h3>
+        <form onSubmit={handleCreate} className="grid md:grid-cols-3 gap-4">
+          <input type="text" placeholder="Project ID" required value={formData.projectId} onChange={e => setFormData({...formData, projectId: e.target.value})} className="bg-[#020617] border border-white/10 p-3 rounded" />
+          <input type="text" placeholder="Client ID" required value={formData.clientId} onChange={e => setFormData({...formData, clientId: e.target.value})} className="bg-[#020617] border border-white/10 p-3 rounded" />
+          <input type="number" placeholder="Amount ($)" required value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} className="bg-[#020617] border border-white/10 p-3 rounded" />
+          <button type="submit" disabled={submitting} className="md:col-span-3 bg-blue-600 hover:bg-blue-700 py-3 rounded font-semibold transition">
+            {submitting ? "Creating..." : "Create Invoice"}
+          </button>
+        </form>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold text-white mb-4">Invoices List</h3>
+        {loading ? <div className="text-slate-500">Loading...</div> : (
+          <div className="grid md:grid-cols-2 gap-4">
+            {invoices.map(inv => (
+              <div key={inv.id} className="bg-white/5 p-4 rounded-lg border border-white/10 flex justify-between items-start">
+                <div>
+                  <h4 className="text-white font-medium">${inv.amount} <span className={`text-xs ml-2 px-2 py-0.5 rounded ${inv.status === 'Paid' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>{inv.status}</span></h4>
+                  <p className="text-xs text-slate-400 mt-1">Project: {inv.projectId}</p>
+                  <p className="text-xs text-slate-400 mt-1">Client: {inv.clientId}</p>
+                </div>
+                <button onClick={() => deleteInvoice(inv.id)} className="text-red-400 hover:text-red-300 p-2"><Trash2 className="w-4 h-4" /></button>
+              </div>
+            ))}
+            {invoices.length === 0 && <p className="text-slate-400">No invoices generated yet.</p>}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

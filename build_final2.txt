@@ -1,0 +1,126 @@
+﻿
+> nexara-platform@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 2182 modules transformed.
+npm : [31mΓ£ù[39m 
+Build failed in 
+3.10s
+At line:1 char:1
++ npm run build 
+2>&1 | Out-File 
+-Encoding utf8 
+build_final2.txt
++ ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: ([31   
+ mΓ£ù[39m Build    
+ failed in 3.10    
+s:String) [], R    
+emoteException
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+[31merror during 
+build:
+[31msrc/pages/Proje
+ctDetails.jsx 
+(8:19): "storage" 
+is not exported by "
+src/firebase/config.
+js", imported by "sr
+c/pages/ProjectDetai
+ls.jsx".[31m
+file: [36mD:/nexara
+-platform/src/pages/
+ProjectDetails.jsx:8
+:19[31m
+[33m
+6: } from 
+'firebase/firestore'
+7: import { ref, 
+uploadBytes, 
+getDownloadURL } 
+from 
+'firebase/storage'
+8: import { db, 
+auth, storage } 
+from '../firebase/co
+nfig.js'
+                    
+  ^
+9: import { 
+MessageSquare, 
+Paperclip, Send, 
+ArrowLeft, 
+FileText, Download 
+} from 
+'lucide-react'
+[31m
+    at 
+getRollupError (file
+:///D:/nexara-platfo
+rm/node_modules/roll
+up/dist/es/shared/pa
+rseAst.js:402:41)
+    at error (file:/
+//D:/nexara-platform
+/node_modules/rollup
+/dist/es/shared/pars
+eAst.js:398:42)
+    at Module.error 
+(file:///D:/nexara-p
+latform/node_modules
+/rollup/dist/es/shar
+ed/node-entry.js:170
+40:16)
+    at Module.traceV
+ariable (file:///D:/
+nexara-platform/node
+_modules/rollup/dist
+/es/shared/node-entr
+y.js:17452:29)
+    at ModuleScope.f
+indVariable (file://
+/D:/nexara-platform/
+node_modules/rollup/
+dist/es/shared/node-
+entry.js:15070:39)
+    at FunctionScope
+.findVariable (file:
+///D:/nexara-platfor
+m/node_modules/rollu
+p/dist/es/shared/nod
+e-entry.js:5673:38)
+    at FunctionBodyS
+cope.findVariable (f
+ile:///D:/nexara-pla
+tform/node_modules/r
+ollup/dist/es/shared
+/node-entry.js:5673:
+38)
+    at ReturnValueSc
+ope.findVariable (fi
+le:///D:/nexara-plat
+form/node_modules/ro
+llup/dist/es/shared/
+node-entry.js:5673:3
+8)
+    at FunctionBodyS
+cope.findVariable (f
+ile:///D:/nexara-pla
+tform/node_modules/r
+ollup/dist/es/shared
+/node-entry.js:5673:
+38)
+    at BlockScope.fi
+ndVariable (file:///
+D:/nexara-platform/n
+ode_modules/rollup/d
+ist/es/shared/node-e
+ntry.js:5673:38)[39
+m

@@ -1,5 +1,10 @@
 import { useState, useContext } from "react"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { 
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendEmailVerification
+} from "firebase/auth"
 import { auth, db } from "../firebase/config"
 import { doc, setDoc, serverTimestamp } from "firebase/firestore"
 import { AppContext } from "../context/AppContext.jsx"
@@ -29,9 +34,14 @@ export default function Signup(){
 
       const user = userCredential.user
 
+      await sendEmailVerification(user)
+
       await setDoc(doc(db,"users",user.uid),{
         email:user.email,
         role:"client",
+        plan:"starter",
+        aiGenerations:0,
+        websites:0,
         createdAt:serverTimestamp()
       })
 
@@ -44,6 +54,40 @@ export default function Signup(){
       }else{
         setError("Signup failed")
       }
+
+    }
+
+    setLoading(false)
+
+  }
+
+  const signupWithGoogle = async ()=>{
+
+    setLoading(true)
+    setError("")
+
+    try{
+
+      const provider = new GoogleAuthProvider()
+
+      const result = await signInWithPopup(auth,provider)
+
+      const user = result.user
+
+      await setDoc(doc(db,"users",user.uid),{
+        email:user.email,
+        role:"client",
+        plan:"starter",
+        aiGenerations:0,
+        websites:0,
+        createdAt:serverTimestamp()
+      },{ merge:true })
+
+      navigate("/dashboard")
+
+    }catch(err){
+
+      setError("Google signup failed")
 
     }
 
@@ -64,6 +108,14 @@ export default function Signup(){
           {error}
         </div>
       )}
+
+      <button
+        onClick={signupWithGoogle}
+        disabled={loading}
+        className="w-full bg-white text-black p-3 rounded hover:bg-gray-200 mb-4"
+      >
+        Continue with Google
+      </button>
 
       <form onSubmit={signup} className="space-y-4">
 

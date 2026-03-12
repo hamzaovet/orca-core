@@ -1,196 +1,82 @@
-import React, { useState, useContext } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { collection, addDoc } from 'firebase/firestore'
-import { db } from '../firebase/config.js'
+import { useContext } from 'react'
+import { motion } from 'framer-motion'
 import { AppContext } from '../context/AppContext.jsx'
-import { PageWrapper } from '../components/PageWrapper.jsx'
-import { CheckCircle2 } from '../components/icons.jsx'
+import { PageWrapper, FadeUpSection } from '../components/PageWrapper.jsx'
+import { MessageCircle } from 'lucide-react'
+
+const WHATSAPP_MESSAGE = encodeURIComponent(
+  "Hello Nexara Team 👋\n\nI'm interested in building a website or digital system for my business.\n\nCould you please tell me:\n• Pricing\n• Estimated delivery time\n• What information you need to start\n\nThank you."
+)
+export const WHATSAPP_URL = `https://wa.me/201118540111?text=${WHATSAPP_MESSAGE}`
+
+const highlights = [
+  { emoji: '🚀', label: 'Fast Delivery' },
+  { emoji: '💎', label: 'Premium Quality' },
+  { emoji: '🔒', label: 'Secure & Reliable' },
+  { emoji: '🌍', label: 'Served Globally' },
+]
 
 export default function ContactPage() {
-  const { t, user } = useContext(AppContext)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    service: 'web',
-    message: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [success, setSuccess] = useState(false)
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!user) return
-    setIsSubmitting(true)
-    try {
-      await addDoc(collection(db, 'service_requests'), {
-        name: formData.name,
-        email: formData.email,
-        service: formData.service,
-        message: formData.message,
-        createdAt: new Date().toISOString(),
-      })
-      setSuccess(true)
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        service: 'web',
-        message: '',
-      })
-      setTimeout(() => setSuccess(false), 5000)
-    } catch (error) {
-      console.error('Error submitting form', error)
-    }
-    setIsSubmitting(false)
-  }
+  const { t } = useContext(AppContext)
+  const c = t.contact
 
   return (
-    <PageWrapper className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-          {t.contact.title}
-        </h1>
-        <p className="text-lg text-slate-400">{t.contact.desc}</p>
+    <PageWrapper className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+
+      {/* Header */}
+      <div className="text-center space-y-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 text-xs uppercase tracking-widest font-semibold">
+          {c.badge}
+        </div>
+        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">{c.title}</h1>
+        <p className="text-slate-400 max-w-xl mx-auto text-lg leading-relaxed">{c.desc}</p>
       </div>
 
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="glass-card border-white/5 p-8 md:p-12 relative overflow-hidden"
-      >
-        <div className="absolute -top-32 -right-32 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
-        <AnimatePresence mode="wait">
-          {success ? (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="text-center py-20"
-            >
-              <div className="w-20 h-20 bg-green-500/10 border border-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="w-10 h-10 text-green-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">
-                {t.contact.success}
-              </h3>
-              <p className="text-slate-400">We will get back to you shortly.</p>
-            </motion.div>
-          ) : (
-            <motion.form
-              key="form"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onSubmit={handleSubmit}
-              className="space-y-6 relative z-10"
-            >
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                    {t.contact.name}
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    className="form-input"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                    {t.contact.email}
-                  </label>
-                  <input
-                    required
-                    type="email"
-                    className="form-input"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                    {t.contact.company}
-                  </label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.company}
-                    onChange={(e) =>
-                      setFormData({ ...formData, company: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                    {t.contact.service}
-                  </label>
-                  <select
-                    className="form-input appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_1rem_center]"
-                    value={formData.service}
-                    onChange={(e) =>
-                      setFormData({ ...formData, service: e.target.value })
-                    }
-                  >
-                    <option className="bg-slate-900" value="web">
-                      {t.services.web.title}
-                    </option>
-                    <option className="bg-slate-900" value="accounting">
-                      {t.services.acc.title}
-                    </option>
-                    <option className="bg-slate-900" value="both">
-                      Integrated Solution
-                    </option>
-                    <option className="bg-slate-900" value="other">
-                      Other
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                  {t.contact.message}
-                </label>
-                <textarea
-                  required
-                  rows="5"
-                  className="form-input resize-none"
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
-                />
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={isSubmitting}
-                className="btn-primary w-full py-4 text-lg mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Sending...
-                  </span>
-                ) : (
-                  t.contact.submit
-                )}
-              </motion.button>
-            </motion.form>
-          )}
-        </AnimatePresence>
-      </motion.div>
+      {/* Main WhatsApp CTA card */}
+      <FadeUpSection>
+        <div className="glass-card border border-green-500/20 bg-green-500/5 p-10 md:p-14 flex flex-col items-center gap-8 text-center rounded-3xl">
+
+          {/* Icon */}
+          <div className="w-24 h-24 rounded-3xl bg-[#25D366] flex items-center justify-center shadow-2xl shadow-green-900/50">
+            <MessageCircle className="w-12 h-12 text-white" />
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-2xl font-bold text-white">Start a conversation on WhatsApp</h2>
+            <p className="text-slate-400 max-w-md mx-auto">
+              Send us a message and we'll respond within a few hours. A pre-filled message is ready for you.
+            </p>
+          </div>
+
+          {/* WhatsApp button */}
+          <motion.a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            className="inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bc5a] text-white font-bold py-5 px-12 rounded-2xl transition-colors shadow-xl shadow-green-900/40 text-xl"
+          >
+            <MessageCircle className="w-7 h-7" />
+            {c.whatsappBtn}
+          </motion.a>
+
+          <p className="text-slate-500 text-sm">Tap the button — a message will open automatically in WhatsApp.</p>
+        </div>
+      </FadeUpSection>
+
+      {/* Trust highlights */}
+      <FadeUpSection>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {highlights.map(({ emoji, label }) => (
+            <div key={label} className="glass-card border border-slate-700/60 p-5 rounded-2xl flex flex-col items-center gap-2 text-center hover:border-slate-500/80 transition-colors">
+              <span className="text-3xl">{emoji}</span>
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</span>
+            </div>
+          ))}
+        </div>
+      </FadeUpSection>
+
     </PageWrapper>
   )
 }
-
