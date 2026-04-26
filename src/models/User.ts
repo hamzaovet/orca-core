@@ -39,11 +39,5 @@ const UserSchema: Schema = new Schema({
   },
 });
 
-// In development, always re-register the model so schema changes (e.g. new fields)
-// are picked up after hot reloads. mongoose.models caches across reloads, causing
-// Mongoose strict mode to silently strip fields added to the schema after first load.
-if (process.env.NODE_ENV !== "production" && mongoose.models["User"]) {
-  mongoose.deleteModel("User");
-}
-
-export const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
+export const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+export default User;
