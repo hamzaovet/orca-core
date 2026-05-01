@@ -49,7 +49,7 @@ export default function ConsultationForm() {
           className="text-center mb-14"
         >
           <p className="text-xs uppercase tracking-[0.35em] text-purple-400/60 font-semibold mb-4">VIP Consultation</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-5">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-5">
             ابدأ التحول الرقمي{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
               لمؤسستك
@@ -69,7 +69,7 @@ export default function ConsultationForm() {
           className="max-w-2xl mx-auto"
         >
           <div
-            className="relative p-8 md:p-12 rounded-3xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.08] overflow-hidden"
+            className="relative p-6 sm:p-8 md:p-12 rounded-3xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.08] overflow-hidden"
             style={{ boxShadow: "0 0 80px rgba(168,85,247,0.08), 0 0 0 1px rgba(255,255,255,0.05)" }}
           >
             {/* Glow orb inside card */}
@@ -88,7 +88,7 @@ export default function ConsultationForm() {
                 </div>
                 <h3 className="text-2xl font-bold text-white">تم استلام طلبك!</h3>
                 <p className="text-gray-400 max-w-sm leading-relaxed">
-                  سيتواصل معك أحد مهندسي Nexara خلال 24 ساعة لمناقشة تفاصيل مشروعك.
+                  سيتواصل معك أحد مهندسي Orca Core خلال 24 ساعة لمناقشة تفاصيل مشروعك.
                 </p>
                 <button
                   onClick={() => { setSubmitted(false); setForm({ company: "", email: "", scale: "", details: "" }); }}

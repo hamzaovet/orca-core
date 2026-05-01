@@ -39,7 +39,7 @@ const cards = [
 
 export default function Ecosystem() {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section id="products" className="py-24 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -48,10 +48,10 @@ export default function Ecosystem() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
             منظومة <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">أوركا</span> المتكاملة
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
             المنتجات الأساسية المصممة لتمكين أعمالك وتوسيع قدراتها من خلال بنية تحتية رقمية لا تقهر.
           </p>
         </motion.div>
@@ -64,7 +64,7 @@ export default function Ecosystem() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: idx * 0.15, ease: "easeOut" }}
-              className={`group relative p-8 rounded-3xl bg-[#0a0a0a] border border-white/5 overflow-hidden transition-all duration-500 ${card.accentClasses}`}
+              className={`group relative p-6 sm:p-8 rounded-3xl bg-[#0a0a0a] border border-white/5 overflow-hidden transition-all duration-500 ${card.accentClasses}`}
             >
               <div className={`absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] pointer-events-none transition-colors duration-500 ${card.glowClasses}`} />
 

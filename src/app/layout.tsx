@@ -8,12 +8,13 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://orca-core.vercel.app"),
   title: "Orca Core | أوركا كور",
   description: "نبني البنية التحتية الرقمية للمؤسسات. أنظمة ERP متطورة، منصات تجارة إلكترونية، وحلول سحابية متكاملة مصممة للحيتان.",
   openGraph: {
     title: "Orca Core | أوركا كور",
     description: "نبني البنية التحتية الرقمية للمؤسسات. أنظمة ERP متطورة، منصات تجارة إلكترونية، وحلول سحابية متكاملة.",
-    url: "https://orca-core.vercel.app", 
+    url: "https://orca-core.vercel.app",
     siteName: "Orca Core",
     images: [
       {

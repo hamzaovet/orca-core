@@ -96,8 +96,7 @@ export default function Footer() {
                 alt="Orca Core Logo"
                 width={180}
                 height={48}
-                className="opacity-90 hover:opacity-100 transition-opacity"
-                style={{ height: "48px", width: "auto" }}
+                className="h-11 w-auto object-contain invert opacity-90 hover:opacity-100 transition-opacity"
               />
             </Link>
             <p className="text-gray-500 text-sm leading-relaxed max-w-sm">
@@ -160,8 +159,8 @@ export default function Footer() {
         <div className="h-px w-full bg-white/5 mb-8" />
 
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-6 text-xs text-gray-600 font-medium">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-600 font-medium">
             <span>© {currentYear} Orca Core Platform. جميع الحقوق محفوظة.</span>
             <Link href="#" className="hover:text-gray-400 transition-colors">سياسة الخصوصية</Link>
             <Link href="#" className="hover:text-gray-400 transition-colors">الشروط والأحكام</Link>

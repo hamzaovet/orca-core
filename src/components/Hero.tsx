@@ -34,7 +34,7 @@ export default function Hero() {
         <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#050505]/50 to-transparent z-10" />
 
         {/* Badge — floats over video at top */}
-        <div className="absolute top-24 inset-x-0 flex justify-center z-20">
+        <div className="absolute top-20 sm:top-24 inset-x-0 flex justify-center z-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -64,7 +64,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-300 to-purple-500 mb-6 max-w-4xl leading-[1.15] tracking-tight"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-300 to-purple-500 mb-4 sm:mb-6 max-w-4xl leading-[1.15] tracking-tight"
         >
           نبني البنية التحتية الرقمية للمؤسسات
         </motion.h1>
@@ -73,7 +73,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl font-medium leading-relaxed"
+          className="text-base sm:text-lg md:text-xl text-gray-400 mb-8 sm:mb-10 max-w-2xl font-medium leading-relaxed px-2 sm:px-0"
         >
           أنظمة ERP متطورة، منصات تجارة إلكترونية، وحلول سحابية متكاملة مصممة للحيتان.
         </motion.p>
@@ -84,18 +84,16 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto"
         >
-          <a
-            href="https://orca-erp.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="#products"
             className="group relative px-8 py-4 w-full sm:w-auto rounded-full bg-white text-[#050505] font-bold text-lg overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(0,255,255,0.3)]"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-cyan-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <span className="relative z-10 flex items-center justify-center gap-3">
-              استكشف ORCA ERP
+              استكشف منتجاتنا
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
             </span>
-          </a>
+          </Link>
 
           <Link
             href="/portal"

@@ -61,7 +61,7 @@ export default function CaseStudies() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: idx * 0.2, ease: "easeOut" }}
-              className={`group relative aspect-[4/3] md:aspect-[16/9] rounded-[2.5rem] overflow-hidden cursor-pointer border border-white/5 transition-all duration-500 ${item.accentBorder}`}
+              className={`group relative aspect-[4/3] sm:aspect-[16/9] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden cursor-pointer border border-white/5 transition-all duration-500 ${item.accentBorder}`}
               style={{ boxShadow: `0 0 40px rgba(0,0,0,0.5)` }}
             >
               
@@ -76,7 +76,7 @@ export default function CaseStudies() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-90" />
 
               {/* 3. Content Area */}
-              <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-between z-10">
+              <div className="absolute inset-0 p-5 sm:p-8 md:p-12 flex flex-col justify-between z-10">
                 
                 {/* Top Row: Icon + Arrow */}
                 <div className="flex justify-between items-start">
@@ -94,12 +94,12 @@ export default function CaseStudies() {
                 <div className="transform transition-transform duration-500">
                   <div className="space-y-3">
                     <p className="text-xs font-bold text-cyan-500/80 tracking-[0.2em] uppercase">{item.subtitle}</p>
-                    <h3 className="text-3xl md:text-4xl font-black text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400 transition-all">
+                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-400 transition-all">
                       {item.title}
                     </h3>
                     
                     {/* Story Content Injection */}
-                    <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-sm opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100">
+                    <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-sm opacity-100 sm:opacity-0 sm:group-hover:opacity-100 translate-y-0 sm:translate-y-4 sm:group-hover:translate-y-0 transition-all duration-500 delay-100">
                       {item.description}
                     </p>
                   </div>

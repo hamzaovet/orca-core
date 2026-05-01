@@ -72,7 +72,7 @@ export default function ClientJourney() {
           <p className="text-xs uppercase tracking-[0.35em] text-cyan-500/50 font-semibold mb-4">
             Client Journey
           </p>
-          <h2 className="text-3xl md:text-5xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white">
             كيف نبني{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
               إمبراطوريتك؟
@@ -104,7 +104,7 @@ export default function ClientJourney() {
               className="relative group"
             >
               <div
-                className={`relative h-full p-8 rounded-3xl bg-[#0a0a0a] border ${step.border} overflow-hidden
+                className={`relative h-full p-6 sm:p-8 rounded-3xl bg-[#0a0a0a] border ${step.border} overflow-hidden
                   transition-all duration-500 
                   hover:shadow-[0_0_50px_var(--glow)] hover:-translate-y-1`}
                 style={{ "--glow": step.glow } as React.CSSProperties}
