@@ -8,8 +8,24 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "Nexara Platform | منصة نكسارا",
+  title: "Orca Core | أوركا كور",
   description: "نبني البنية التحتية الرقمية للمؤسسات. أنظمة ERP متطورة، منصات تجارة إلكترونية، وحلول سحابية متكاملة مصممة للحيتان.",
+  openGraph: {
+    title: "Orca Core | أوركا كور",
+    description: "نبني البنية التحتية الرقمية للمؤسسات. أنظمة ERP متطورة، منصات تجارة إلكترونية، وحلول سحابية متكاملة.",
+    url: "https://orca-core.vercel.app", 
+    siteName: "Orca Core",
+    images: [
+      {
+        url: "/assets/orcacore-logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Orca Core Logo",
+      },
+    ],
+    locale: "ar_EG",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
